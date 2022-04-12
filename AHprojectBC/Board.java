@@ -586,7 +586,7 @@ public class Board{
 
                             //checks if move is legal
 
-                            Image icon = getPieceImage(selY, selX);
+                           // Image icon = getPieceImage(selY, selX);
 
                             if(game.movePiece(selY, selX, row, col, selectedPiece)){
 

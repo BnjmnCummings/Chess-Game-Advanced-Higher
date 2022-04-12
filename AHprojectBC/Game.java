@@ -702,9 +702,7 @@ public class Game {
                 //white wins
                 System.out.println("CHECKMATE WHITE WINS");
             }
-
         }
-
     }
 
 
