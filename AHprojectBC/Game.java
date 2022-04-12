@@ -12,12 +12,15 @@ public class Game {
 
     //used for generating future moves - copies current board with out damaging its value
     private String [][] copyBoard;
+    private String [][] copyBoard0;
+    private String [][] copyBoard2;
 
     public boolean whiteTurn;
     public boolean whiteCheck;
     public boolean blackCheck;
 
     private HashMap<Character, Piece[]> pieceMap;
+    HashMap<Character, Integer> pointMap = new HashMap<Character, Integer>();
 
     //set of taken pieces
     private HashSet<String> takeSet;
@@ -31,8 +34,16 @@ public class Game {
     public Game(){
 
         gameBoard = new String[LENGTH][LENGTH];
-
         copyBoard = new String[LENGTH][LENGTH];
+        copyBoard0 = new String[LENGTH][LENGTH];
+        copyBoard2 = new String[LENGTH][LENGTH];
+
+        pointMap.put('p', 10);
+        pointMap.put('k', 30);
+        pointMap.put('b', 30);
+        pointMap.put('r', 50);
+        pointMap.put('q', 90);
+        pointMap.put('x', 900);
 
         whiteTurn = true;
         whiteCheck = false;
@@ -105,6 +116,15 @@ public class Game {
 
         gameBoard = new String[LENGTH][LENGTH];
         copyBoard = new String[LENGTH][LENGTH];
+        copyBoard0 = new String[LENGTH][LENGTH];
+        copyBoard2 = new String[LENGTH][LENGTH];
+
+        pointMap.put('p', 10);
+        pointMap.put('k', 30);
+        pointMap.put('b', 30);
+        pointMap.put('r', 50);
+        pointMap.put('q', 90);
+        pointMap.put('x', 900);
 
         whiteTurn = currentWhiteTurn;
         whiteCheck = false;
@@ -194,7 +214,7 @@ public class Game {
 
         
 
-        if(legalMove(row, col, newRow, newCol, piece, true)){
+        if(legalMove(row, col, newRow, newCol, piece, true, whiteTurn)){
 
             //start both checks at false
             blackCheck = false;
@@ -236,12 +256,13 @@ public class Game {
                 System.out.println("its blacks turn");
             }
 
+            //test AI
+
             System.out.println(">>> moves that black can make");
 
-            Vector<Move> listy = generateMoveList();
-            if(listy !=null){
-                Oponent.AiMove(this.gameBoard, listy);
-            }
+            
+                AiMove(this.gameBoard);
+
              
 
             //check if its check mate
@@ -272,17 +293,17 @@ public class Game {
 
 
 
-    private boolean legalMove(int row, int col, int newRow, int newCol, String piece, boolean realBoard){ 
+    private boolean legalMove(int row, int col, int newRow, int newCol, String piece, boolean realBoard, boolean turn){ 
 
         //1 validate correct turn
-            if(piece.charAt(1)=='b'&& whiteTurn){
+            if(piece.charAt(1)=='b'&& turn){
                 if(realBoard){
                     System.out.println("incorrect turn");
                 }
                 return false;
             }
 
-            if(piece.charAt(1)=='w'&& !whiteTurn){
+            if(piece.charAt(1)=='w'&& !turn){
                 if(realBoard){
                     System.out.println("incorrect turn");
                 }
@@ -345,10 +366,10 @@ public class Game {
                     }
                 }
             }
-            System.out.println("takeSet: ");
+            /* System.out.println("takeSet: ");
             for(String take : takeSet){
                 System.out.println(take);
-            }
+            } */
             
 
         return true;
@@ -514,7 +535,7 @@ public class Game {
                             } 
                             
                             //pass in false as we dont want to generate the moveset twice
-                            if(legalMove(i, j, Character.getNumericValue(move.charAt(0)), Character.getNumericValue(move.charAt(1)), this.gameBoard[i][j], false)){
+                            if(legalMove(i, j, Character.getNumericValue(move.charAt(0)), Character.getNumericValue(move.charAt(1)), this.gameBoard[i][j], false, whiteTurn)){
                                 return false;
                             }
                         }
@@ -675,49 +696,171 @@ public class Game {
 
     // oponent methods
 
-    public Vector<Move> generateMoveList(){
+    public Vector<Move> generateMoveList(String[][] board, boolean white){
 
         //initialise moveList
         Vector<Move> moveList = new Vector<Move>();
         int newRow;
         int newCol;
 
+        System.out.println("printing white = "+white);
+
         for(int i=0; i<8; i++){
             for(int j=0; j<8; j++){
-                if(this.gameBoard[i][j] != null){
+                if(board[i][j] != null){
                     //only look at similarly coloured pieces to colour under attack
-                    if(this.gameBoard[i][j].charAt(1)=='b'){    
-                        //System.out.println(this.gameBoard[i][j]);
+                    if((board[i][j].charAt(1)=='w') == white){    
+                        System.out.println(this.gameBoard[i][j]);
                         //generate its moveset
-                        pieceMap.get(this.gameBoard[i][j].charAt(0))[1].moves(i,j,
-                                     /* false for black colour */(this.gameBoard[i][j].charAt(1)=='w'), this.gameBoard, false);
+                        pieceMap.get(board[i][j].charAt(0))[1].moves(i,j,
+                                     /* false for black colour */(board[i][j].charAt(1)=='w'), board, false);
 
                         //for each move in their moveset...
-                        Iterator<String> ite = pieceMap.get(this.gameBoard[i][j].charAt(0))[1].moveset.iterator();
+                        Iterator<String> ite = pieceMap.get(board[i][j].charAt(0))[1].moveset.iterator();
 
                         String move;
 
+                        System.out.println(board[i][j]);
+
                         while(ite.hasNext()){
                             move = (String) ite.next();
-                            //System.out.println(move);
+                            System.out.println(move);
 
                             newRow = Character.getNumericValue(move.charAt(0));
                             newCol = Character.getNumericValue(move.charAt(1));
+
+                            System.out.println(board[i][j]);
                             
                             //check if move is legal
-                            if(legalMove(i, j, newRow, newCol, this.gameBoard[i][j], false)){
+                            if(legalMove(i, j, newRow, newCol, board[i][j], false, white)){ // white = true then we work out moveset for white pieces and therefore the turn must be white
                                 //add to vecor
-                                moveList.add(new Move(i, j, newRow, newCol, this.gameBoard[i][j], this.gameBoard[newRow][newCol]));
+                                System.out.println(board[i][j]+"before");
+                                moveList.add(new Move(i, j, newRow, newCol, board[i][j], board[newRow][newCol]));
+                                System.out.println(move);
+                                System.out.println(board[i][j]);
                             }
                         }
                     }
                 }
+                System.out.println("successful iteration");
             }
         }
 
         return moveList;
     }
+    public Move AiMove(String[][] board){
 
+        Vector<Move> blackMoves = generateMoveList(this.gameBoard, false);
+
+       // Integer min = null;
+
+        //for each move generate a rating
+
+        Iterator<Move> a = blackMoves.iterator();
+
+        Move currentBlackMove;
+        Move currentWhiteMove;
+
+        while(a.hasNext()){
+            currentBlackMove = a.next();
+            //System.out.println("move: "+currentMove);// test
+
+            //reset copyBoard
+            for(int i =0; i<8; i++){
+                for(int j =0; j<8; j++){
+                    copyBoard0[i][j] = board[i][j];
+                }
+                
+            }
+
+            //make black move on copy board
+
+            copyBoard0[currentBlackMove.destY][currentBlackMove.destX] = copyBoard0[currentBlackMove.startY][currentBlackMove.startX];
+            copyBoard0[currentBlackMove.startY][currentBlackMove.startX] = null;
+
+            //generate whitemoves after black move
+
+            Vector<Move> whiteMoves = generateMoveList(copyBoard0, true);
+
+            //iterate through white moves and generate a rating
+
+            Iterator<Move> b = whiteMoves.iterator();
+
+            while(b.hasNext()){
+                currentWhiteMove = b.next();
+                //get white rating
+                generateRating(copyBoard0,  currentWhiteMove);
+                //find minimum
+
+                /* if(min !=  null){
+                    if(currentBlackMove.rating < min){
+                        min = currentBlackMove.rating;
+                    }
+                    
+                }else{
+                    min = currentBlackMove.rating;
+                } */
+                
+
+            }
+            //System.out.println(whiteMoves.size());
+            System.out.println(whiteMoves.elementAt(0).rating);
+
+            int min = whiteMoves.elementAt(0).rating;
+
+            for(Move m : whiteMoves){
+                if(m.rating < min){
+                    min = m.rating;
+                }
+            }
+            
+            //assign min rating to black move
+
+            currentBlackMove.rating = min;
+            System.out.println("value of black move: "+min);
+
+        }
+
+        //find maximum value
+
+        //return max move
+
+       
+        return null;
+
+    }
+
+    private void generateRating(String[][] board,  Move whtMove){
+        whtMove.rating = 0;
+        //add value for taking a piece
+
+        //generate current white move on auxillary copy board
+        
+        for(int i =0; i<8; i++){
+            for(int j =0; j<8; j++){
+                copyBoard2[i][j] = board[i][j];
+            }
+            
+        }
+
+        //make move on auxillary copy board
+
+        copyBoard2[whtMove.destY][whtMove.destX] = copyBoard2[whtMove.startY][whtMove.startX];
+        copyBoard2[whtMove.startY][whtMove.startX] = null;
+
+        for(int i =0; i<8; i++){
+            for(int j =0; j<8; j++){
+                if(copyBoard2[i][j] != null){
+                    //take away points for every white piece and add points for every black piece
+                    if(copyBoard2[i][j].charAt(1)=='w'){
+                        whtMove.rating -= pointMap.get(copyBoard2[i][j].charAt(0));
+                    }else{
+                        whtMove.rating += pointMap.get(copyBoard2[i][j].charAt(0));
+                    }
+                }
+            }   
+        }
+    }
 
 
 
