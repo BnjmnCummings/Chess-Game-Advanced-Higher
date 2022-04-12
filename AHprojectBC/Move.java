@@ -9,6 +9,8 @@ public class Move{
     public int destY;
     public int destX;
 
+    public int rating;
+
     public String takenPiece;
 
     public Move(int row, int col, int newRow, int newCol, String pce, String tknPiece){
@@ -20,5 +22,7 @@ public class Move{
         
         destY = newRow;
         destX = newCol;
+
+        rating = 0;
     }
 }
