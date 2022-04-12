@@ -237,7 +237,12 @@ public class Game {
             }
 
             System.out.println(">>> moves that black can make");
-             moveList();
+
+            Vector<Move> listy = generateMoveList();
+            if(listy !=null){
+                Oponent.AiMove(this.gameBoard, listy);
+            }
+             
 
             //check if its check mate
 
@@ -670,7 +675,7 @@ public class Game {
 
     // oponent methods
 
-    public Vector<Move> moveList(){
+    public Vector<Move> generateMoveList(){
 
         //initialise moveList
         Vector<Move> moveList = new Vector<Move>();
@@ -682,7 +687,7 @@ public class Game {
                 if(this.gameBoard[i][j] != null){
                     //only look at similarly coloured pieces to colour under attack
                     if(this.gameBoard[i][j].charAt(1)=='b'){    
-                        System.out.println(this.gameBoard[i][j]);
+                        //System.out.println(this.gameBoard[i][j]);
                         //generate its moveset
                         pieceMap.get(this.gameBoard[i][j].charAt(0))[1].moves(i,j,
                                      /* false for black colour */(this.gameBoard[i][j].charAt(1)=='w'), this.gameBoard, false);
@@ -694,7 +699,7 @@ public class Game {
 
                         while(ite.hasNext()){
                             move = (String) ite.next();
-                            System.out.println(move);
+                            //System.out.println(move);
 
                             newRow = Character.getNumericValue(move.charAt(0));
                             newCol = Character.getNumericValue(move.charAt(1));
@@ -710,7 +715,7 @@ public class Game {
             }
         }
 
-        return null;
+        return moveList;
     }
 
 
