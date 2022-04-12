@@ -594,10 +594,31 @@ public class Board{
 
                                 selected = false;
                             
-                                if(icon != null){
+                                /* if(icon != null){
 
                                     setPieceImage(icon, row, col);
                                     chessBoardSquares[selY][selX].setIcon(null);
+                                } */
+
+                                for(int i=0; i<LENGTH; i++){
+                                    for(int j=0; j<LENGTH; j++){
+                                        if(i%2 == j%2){
+                                            chessBoardSquares[i][j].setBackground(colourW);
+                        
+                                        }else{
+                                            chessBoardSquares[i][j].setBackground(colourB);
+                                        }
+                
+                                        if(game.gameBoard[i][j] == null){
+                                            chessBoardSquares[i][j].setIcon(null);
+                                        }else{
+                                            Image initailIcon = getPieceImage(i, j);
+                                            if(initailIcon != null){
+                                                setPieceImage(initailIcon, i, j);
+                                            }
+                                        }
+                                        
+                                    }
                                 }
 
                                 //get king coordinated

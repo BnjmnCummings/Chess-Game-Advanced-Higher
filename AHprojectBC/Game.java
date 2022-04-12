@@ -256,14 +256,31 @@ public class Game {
                 System.out.println("its blacks turn");
             }
 
-            //test AI
+            //test AI>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-            System.out.println(">>> moves that black can make");
+            System.out.println(">>> black calculating move");
 
-            
-                AiMove(this.gameBoard);
+            Move opponentMove = AiMove(this.gameBoard);
 
-             
+            this.gameBoard[opponentMove.destY][opponentMove.destX] = this.gameBoard[opponentMove.startY][opponentMove.startX];
+            this.gameBoard[opponentMove.startY][opponentMove.startX] = null;
+
+            for(int i =0; i<8; i++){
+                for(int j =0; j<8; j++){
+                    System.out.print(gameBoard[i][j]);
+                }
+                System.out.print("\n");
+            }
+
+            //change turn
+            whiteTurn = !whiteTurn;
+
+            if(whiteTurn){
+                System.out.println("its whites turn");
+            }else{
+                System.out.println("its blacks turn");
+            }
+
 
             //check if its check mate
 
@@ -750,6 +767,8 @@ public class Game {
     }
     public Move AiMove(String[][] board){
 
+        Move returnMove;
+
         Vector<Move> blackMoves = generateMoveList(this.gameBoard, false);
 
        // Integer min = null;
@@ -792,19 +811,10 @@ public class Game {
                 generateRating(copyBoard0,  currentWhiteMove);
                 //find minimum
 
-                /* if(min !=  null){
-                    if(currentBlackMove.rating < min){
-                        min = currentBlackMove.rating;
-                    }
-                    
-                }else{
-                    min = currentBlackMove.rating;
-                } */
-                
-
             }
             //System.out.println(whiteMoves.size());
-            System.out.println(whiteMoves.elementAt(0).rating);
+           /*  System.out.println("initial score");
+            System.out.println(whiteMoves.elementAt(0).rating); */
 
             int min = whiteMoves.elementAt(0).rating;
 
@@ -813,20 +823,27 @@ public class Game {
                     min = m.rating;
                 }
             }
+            /* System.out.println("min");
+            System.out.println(min); */
             
             //assign min rating to black move
 
             currentBlackMove.rating = min;
-            System.out.println("value of black move: "+min);
+            //System.out.println("value of black move: "+min);
 
         }
 
-        //find maximum value
+        int max = blackMoves.elementAt(0).rating;
+        returnMove = blackMoves.elementAt(0);
 
-        //return max move
-
+        for(Move m : blackMoves){
+            if(m.rating > max){
+                max = m.rating;
+                returnMove = m;
+            }
+        }
        
-        return null;
+        return returnMove;
 
     }
 
