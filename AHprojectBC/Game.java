@@ -771,8 +771,6 @@ public class Game {
 
         Vector<Move> blackMoves = generateMoveList(this.gameBoard, false);
 
-       // Integer min = null;
-
         //for each move generate a rating
 
         Iterator<Move> a = blackMoves.iterator();
@@ -780,10 +778,13 @@ public class Game {
         Move currentBlackMove;
         Move currentWhiteMove;
 
+        if(blackMoves.size()==0){
+            System.out.println("CHECK MATE WHITE WINS");
+            return null;
+        }
+
         while(a.hasNext()){
             currentBlackMove = a.next();
-            //System.out.println("move: "+currentMove);// test
-
             //reset copyBoard
             for(int i =0; i<8; i++){
                 for(int j =0; j<8; j++){
@@ -791,31 +792,33 @@ public class Game {
                 }
                 
             }
-
             //make black move on copy board
-
             copyBoard0[currentBlackMove.destY][currentBlackMove.destX] = copyBoard0[currentBlackMove.startY][currentBlackMove.startX];
             copyBoard0[currentBlackMove.startY][currentBlackMove.startX] = null;
 
-            //generate whitemoves after black move
 
+            //generate whitemoves after black move
             Vector<Move> whiteMoves = generateMoveList(copyBoard0, true);
 
-            //iterate through white moves and generate a rating
+            //if white can make no moves after this move then AI wins
+            if(whiteMoves.size() == 0){
+                System.out.println("CHECK MATE BLACK WINS");
+                return currentBlackMove;
+            }
 
+
+
+            //else iterate through white moves and generate a rating
             Iterator<Move> b = whiteMoves.iterator();
 
             while(b.hasNext()){
                 currentWhiteMove = b.next();
                 //get white rating
                 generateRating(copyBoard0,  currentWhiteMove);
-                //find minimum
-
+                
             }
-            //System.out.println(whiteMoves.size());
-           /*  System.out.println("initial score");
-            System.out.println(whiteMoves.elementAt(0).rating); */
-
+            
+            //find minimum
             int min = whiteMoves.elementAt(0).rating;
 
             for(Move m : whiteMoves){
@@ -823,15 +826,20 @@ public class Game {
                     min = m.rating;
                 }
             }
-            /* System.out.println("min");
-            System.out.println(min); */
-            
+
             //assign min rating to black move
-
             currentBlackMove.rating = min;
-            //System.out.println("value of black move: "+min);
 
-        }
+            //add points when move puts white in check
+
+            for(Move m : blackMoves){
+                if(kingInCheck(copyBoard0, true )){
+                    m.rating += pointMap.get('x');
+                }
+            }
+
+        } 
+        
 
         int max = blackMoves.elementAt(0).rating;
         returnMove = blackMoves.elementAt(0);
@@ -877,6 +885,12 @@ public class Game {
                 }
             }   
         }
+
+        //if move causes check
+
+        if(kingInCheck(copyBoard2, false)){// black attacked
+            whtMove.rating -= pointMap.get('x');
+        } 
     }
 
 
