@@ -2,7 +2,7 @@ package AHprojectBC;
 
 public class Main{
     public static void main(String [] args){
-        //Test github commit
+        //Test github commit 2
         
         Board myBoard = new Board(500);
 
