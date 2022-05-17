@@ -12,8 +12,8 @@ public class Game {
 
     //used for generating future moves - copies current board with out damaging its value
     private String [][] copyBoard;
-    private String [][] copyBoard0;
-    private String [][] copyBoard2;
+    private String [][] copyBoardBlkMove;
+    private String [][] copyBoardWhtMove;
 
     public boolean whiteTurn;
     public boolean whiteCheck;
@@ -35,8 +35,8 @@ public class Game {
 
         gameBoard = new String[LENGTH][LENGTH];
         copyBoard = new String[LENGTH][LENGTH];
-        copyBoard0 = new String[LENGTH][LENGTH];
-        copyBoard2 = new String[LENGTH][LENGTH];
+        copyBoardBlkMove = new String[LENGTH][LENGTH];
+        copyBoardWhtMove = new String[LENGTH][LENGTH];
 
         pointMap.put('p', 10);
         pointMap.put('k', 30);
@@ -116,8 +116,8 @@ public class Game {
 
         gameBoard = new String[LENGTH][LENGTH];
         copyBoard = new String[LENGTH][LENGTH];
-        copyBoard0 = new String[LENGTH][LENGTH];
-        copyBoard2 = new String[LENGTH][LENGTH];
+        copyBoardBlkMove = new String[LENGTH][LENGTH];
+        copyBoardWhtMove = new String[LENGTH][LENGTH];
 
         pointMap.put('p', 10);
         pointMap.put('k', 30);
@@ -786,17 +786,17 @@ public class Game {
             //reset copyBoard
             for(int i =0; i<8; i++){
                 for(int j =0; j<8; j++){
-                    copyBoard0[i][j] = board[i][j];
+                    copyBoardBlkMove[i][j] = board[i][j];
                 }
                 
             }
             //make black move on copy board
-            copyBoard0[currentBlackMove.destY][currentBlackMove.destX] = copyBoard0[currentBlackMove.startY][currentBlackMove.startX];
-            copyBoard0[currentBlackMove.startY][currentBlackMove.startX] = null;
+            copyBoardBlkMove[currentBlackMove.destY][currentBlackMove.destX] = copyBoardBlkMove[currentBlackMove.startY][currentBlackMove.startX];
+            copyBoardBlkMove[currentBlackMove.startY][currentBlackMove.startX] = null;
 
 
             //generate whitemoves after black move
-            Vector<Move> whiteMoves = generateMoveList(copyBoard0, true);
+            Vector<Move> whiteMoves = generateMoveList(copyBoardBlkMove, true);
 
             //if white can make no moves after this move then AI wins
             if(whiteMoves.size() == 0){
@@ -812,7 +812,7 @@ public class Game {
             while(b.hasNext()){
                 currentWhiteMove = b.next();
                 //get white rating
-                generateRating(copyBoard0,  currentWhiteMove);
+                generateRating(copyBoardBlkMove,  currentWhiteMove);
                 
             }
             
@@ -831,7 +831,7 @@ public class Game {
             //add points when move puts white in check
 
             for(Move m : blackMoves){
-                if(kingInCheck(copyBoard0, true )){
+                if(kingInCheck(copyBoardBlkMove, true )){
                     m.rating += pointMap.get('x');
                 }
             }
@@ -861,24 +861,24 @@ public class Game {
         
         for(int i =0; i<8; i++){
             for(int j =0; j<8; j++){
-                copyBoard2[i][j] = board[i][j];
+                copyBoardWhtMove[i][j] = board[i][j];
             }
             
         }
 
         //make move on auxillary copy board
 
-        copyBoard2[whtMove.destY][whtMove.destX] = copyBoard2[whtMove.startY][whtMove.startX];
-        copyBoard2[whtMove.startY][whtMove.startX] = null;
+        copyBoardWhtMove[whtMove.destY][whtMove.destX] = copyBoardWhtMove[whtMove.startY][whtMove.startX];
+        copyBoardWhtMove[whtMove.startY][whtMove.startX] = null;
 
         for(int i =0; i<8; i++){
             for(int j =0; j<8; j++){
-                if(copyBoard2[i][j] != null){
+                if(copyBoardWhtMove[i][j] != null){
                     //take away points for every white piece and add points for every black piece
-                    if(copyBoard2[i][j].charAt(1)=='w'){
-                        whtMove.rating -= pointMap.get(copyBoard2[i][j].charAt(0));
+                    if(copyBoardWhtMove[i][j].charAt(1)=='w'){
+                        whtMove.rating -= pointMap.get(copyBoardWhtMove[i][j].charAt(0));
                     }else{
-                        whtMove.rating += pointMap.get(copyBoard2[i][j].charAt(0));
+                        whtMove.rating += pointMap.get(copyBoardWhtMove[i][j].charAt(0));
                     }
                 }
             }   
@@ -886,7 +886,7 @@ public class Game {
 
         //if move causes check
 
-        if(kingInCheck(copyBoard2, false)){// black attacked
+        if(kingInCheck(copyBoardWhtMove, false)){// black attacked
             whtMove.rating -= pointMap.get('x');
         } 
     }
