@@ -479,7 +479,7 @@ public class Board{
 
         Image img;
         try {
-            img = ImageIO.read(getClass().getResource("./chessPieces/qb.png"));
+            img = ImageIO.read(getClass().getResource("./resources/chessPieces/qb.png"));
             frame.setIconImage(img);
         } catch (IOException ex) {
             System.out.println(ex);
@@ -719,13 +719,6 @@ public class Board{
 
     }
 
-
-
-
-
-
-
-
     //some image methods
 
     private Image getPieceImage(int row, int col){
@@ -734,7 +727,7 @@ public class Board{
             pieceName = pieceName.substring(0, 2);
 
             try {
-                Image img = ImageIO.read(getClass().getResource("./chessPieces/"+ pieceName +".png"));
+                Image img = ImageIO.read(getClass().getResource("./resources/chessPieces/"+ pieceName +".png"));
                 return img;
             }catch (Exception ex) {
                 System.out.println(ex);
@@ -779,4 +772,3 @@ public class Board{
         return false;
     }
 }
-

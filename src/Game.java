@@ -6,6 +6,14 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.Vector;
+
+import src.pieces.Bishop;
+import src.pieces.King;
+import src.pieces.Knight;
+import src.pieces.Pawn;
+import src.pieces.Piece;
+import src.pieces.Queen;
+import src.pieces.Rook;
 public class Game {
 
     public String [][] gameBoard;
@@ -392,14 +400,6 @@ public class Game {
         return true;
     }
 
-
-
-
-
-
-
-
-
     public boolean pieceExists(int row, int col){
         if(gameBoard[row][col]==null){
             return false;
@@ -456,14 +456,6 @@ public class Game {
 
         return null;
     } */
-
-
-
-
-
-
-
-
 
     private boolean kingInCheck(String[][] board, boolean whiteAttackedAt){
         //whiteAttackedAt = true   >> find pieces that are putting WHITE KING in check
@@ -595,14 +587,6 @@ public class Game {
         return false;
 
     }
-
-
-
-
-
-
-
-
   
     public String parseGame(){
         String output="";
@@ -890,12 +874,5 @@ public class Game {
             whtMove.rating -= pointMap.get('x');
         } 
     }
-
-
-
-
-
-
-
 
 }   

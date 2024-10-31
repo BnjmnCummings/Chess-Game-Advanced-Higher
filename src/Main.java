@@ -1,5 +1,6 @@
 package src;
 
+
 public class Main{
     public static void main(String [] args){
         //Test github commit 3
@@ -22,8 +23,6 @@ public class Main{
 
         //TEST verify correct piece placement
     
-        
-
         /* Game testGame = new Game();
 
         for(int i =0; i<8; i++){
@@ -78,10 +77,6 @@ public class Main{
         frame.setSize(500,500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true); */
-
-
-
-
        
     }
 }
