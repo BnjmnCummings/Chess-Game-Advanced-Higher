@@ -147,13 +147,7 @@ public class Board{
                     System.out.println("Game dont Exists");
                     DataBaseConn.dbInsert(currentTurn, NameOfSave, currentGame);
                 }
-
-                
-
-                
-
             }
-            
         });
 
         f3.addActionListener( new ActionListener(){
@@ -484,32 +478,9 @@ public class Board{
         } catch (IOException ex) {
             System.out.println(ex);
         }
-        
 
         //instantilize game
         game = new Game();
-
-        /* to show that loading game actually works *///game = new Game("rb/kb/bb/qb/xb/bb/kb/rb/pb/pb/pb/pb/pb/pb/pb/pb/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/0/pw/pw/pw/pw/pw/pw/pw/pw/rw/kw/bw/qw/xw/bw/kw/rw/", true);
-        
-
-
-        /* Rook rook1 = new Rook();
-        rook1.moves(0, 0, true,game.gameBoard, true);
-        Rook rook2 = new Rook();
-        rook2.moves(1, 1, true,game.gameBoard, true); */
-
-        /* System.out.println("rook1 moveset");
-        for(String move : rook1.moveset){
-            System.out.println(move);
-            game.gameBoard[Character.getNumericValue(move.charAt(0))]
-            [Character.getNumericValue(move.charAt(1))] = " 1  ";
-        }
-        System.out.println("rook2 moveset");
-        for(String move : rook2.moveset){
-            System.out.println(move);
-            game.gameBoard[Character.getNumericValue(move.charAt(0))]
-            [Character.getNumericValue(move.charAt(1))] = " 2 ";
-        } */
 
         System.out.println("GameBoard: ");
 
@@ -539,183 +510,154 @@ public class Board{
         
     }
 
-
-
-
-
-
-
-
-
-
     private void initiateChessSquare(int row, int col){
         chessBoardSquares[row][col] = new JButton();
+        //chessboard pattern
 
-                //chessboard pattern
+        if(row%2 == col%2){
+            chessBoardSquares[row][col].setBackground(colourW);
 
-                if(row%2 == col%2){
-                    chessBoardSquares[row][col].setBackground(colourW);
+        }else{
+            chessBoardSquares[row][col].setBackground(colourB);
+        }
 
-                }else{
-                    chessBoardSquares[row][col].setBackground(colourB);
-                }
+        chessBoardSquares[row][col].setOpaque(true);
+        chessBoardSquares[row][col].setBorderPainted(false);
+        chessBoardSquares[row][col].setSize(squareSize, squareSize); 
 
-                chessBoardSquares[row][col].setOpaque(true);
-                chessBoardSquares[row][col].setBorderPainted(false);
-                chessBoardSquares[row][col].setSize(squareSize, squareSize); 
+        // iinitalise piece icons
+        Image initailIcon = getPieceImage(row, col);
+        if(initailIcon != null){
+            setPieceImage(initailIcon, row, col);
+        }
 
+        //button functions
 
-                //~~~chessBoardSquares[row][col].setText(game.pieceAt(row, col)); ~~~// for testing
+        chessBoardSquares[row][col].addActionListener(new ActionListener(){  
+            public void actionPerformed(ActionEvent e){  
 
-                // iinitalise piece icons
-                Image initailIcon = getPieceImage(row, col);
-                if(initailIcon != null){
-                    setPieceImage(initailIcon, row, col);
-                }
+                if(selected){
 
-                //button functions
+                    //checks if move is legal
 
-                chessBoardSquares[row][col].addActionListener(new ActionListener(){  
-                    public void actionPerformed(ActionEvent e){  
+                    if(game.movePiece(selY, selX, row, col, selectedPiece)){
 
-                        if(selected){
+                        System.out.println("moved"); //test
 
-                            //checks if move is legal
+                        selected = false;
 
-                           // Image icon = getPieceImage(selY, selX);
-
-                            if(game.movePiece(selY, selX, row, col, selectedPiece)){
-
-                                System.out.println("moved"); //test
-
-                                selected = false;
-                            
-                                /* if(icon != null){
-
-                                    setPieceImage(icon, row, col);
-                                    chessBoardSquares[selY][selX].setIcon(null);
-                                } */
-
-                                for(int i=0; i<LENGTH; i++){
-                                    for(int j=0; j<LENGTH; j++){
-                                        if(i%2 == j%2){
-                                            chessBoardSquares[i][j].setBackground(colourW);
-                        
-                                        }else{
-                                            chessBoardSquares[i][j].setBackground(colourB);
-                                        }
+                        for(int i=0; i<LENGTH; i++){
+                            for(int j=0; j<LENGTH; j++){
+                                if(i%2 == j%2){
+                                    chessBoardSquares[i][j].setBackground(colourW);
                 
-                                        if(game.gameBoard[i][j] == null){
-                                            chessBoardSquares[i][j].setIcon(null);
-                                        }else{
-                                            Image initailIcon = getPieceImage(i, j);
-                                            if(initailIcon != null){
-                                                setPieceImage(initailIcon, i, j);
-                                            }
-                                        }
-                                        
-                                    }
-                                }
-
-                                //get king coordinated
-
-                                bkY = Character.getNumericValue(game.kingCoords(false, game.gameBoard).charAt(0)); 
-                                bkX = Character.getNumericValue(game.kingCoords(false, game.gameBoard).charAt(1)); 
-
-                                wkY = Character.getNumericValue(game.kingCoords(true, game.gameBoard).charAt(0)); 
-                                wkX = Character.getNumericValue(game.kingCoords(true, game.gameBoard).charAt(1)); 
-
-                                if(game.blackCheck){
-                                    //check red
-                                    chessBoardSquares[bkY][bkX].setBackground(Color.decode("#ff7c3b"));
-                                    chessBoardSquares[selY][selX].updateUI();
-                                    System.out.println("changed colour to red   "+bkY+bkX);
-
                                 }else{
-                                    if(bkY%2 == bkX%2){
-                                        chessBoardSquares[bkY][bkX].setBackground(colourW);
-                    
-                                    }else{
-                                        chessBoardSquares[bkY][bkX].setBackground(colourB);
-                                    }
-
+                                    chessBoardSquares[i][j].setBackground(colourB);
                                 }
-
-                                if(game.whiteCheck){
-                                    chessBoardSquares[wkY][wkX].setBackground(Color.decode("#ff7c3b"));
-                                    chessBoardSquares[selY][selX].updateUI();
-                                    System.out.println("changed colour to red   "+wkY+wkX);
-
+        
+                                if(game.gameBoard[i][j] == null){
+                                    chessBoardSquares[i][j].setIcon(null);
                                 }else{
-                                    if(wkY%2 == wkX%2){
-                                        chessBoardSquares[wkY][wkX].setBackground(colourW);
-                    
-                                    }else{
-                                        chessBoardSquares[wkY][wkX].setBackground(colourB);
+                                    Image initailIcon = getPieceImage(i, j);
+                                    if(initailIcon != null){
+                                        setPieceImage(initailIcon, i, j);
                                     }
-
                                 }
-
-                                selectedPiece = null;
-
-                                chessBoardSquares[selY][selX].updateUI();
-
+                                
                             }
+                        }
 
-                            //deselect piece 
+                        //get king coordinated
 
-                            else{
-                                System.out.println("illegal move");
-                            }
+                        bkY = Character.getNumericValue(game.kingCoords(false, game.gameBoard).charAt(0)); 
+                        bkX = Character.getNumericValue(game.kingCoords(false, game.gameBoard).charAt(1)); 
 
-                            selected = false;
+                        wkY = Character.getNumericValue(game.kingCoords(true, game.gameBoard).charAt(0)); 
+                        wkX = Character.getNumericValue(game.kingCoords(true, game.gameBoard).charAt(1)); 
 
-                            if(selY%2 == selX%2){
-                                chessBoardSquares[selY][selX].setBackground(colourW);
-            
-                            }else{
-                                chessBoardSquares[selY][selX].setBackground(colourB);
-                            }
-
-                            if(game.pieceAt(selY, selX)!= null){
-                                if(game.pieceAt(selY, selX).charAt(0) == 'x'){
-                                    if((game.pieceAt(selY, selX).charAt(1) == 'w')&&(game.whiteCheck)||(game.pieceAt(selY, selX).charAt(1) != 'w')&&(game.blackCheck)){
-                                        chessBoardSquares[selY][selX].setBackground(Color.decode("#ff7c3b"));                                            
-
-                                    }
-
-                                }
-
-                            }                              
-                            
-                            //~~~chessBoardSquares[selY][selX].setText(game.pieceAt(selY, selX)); ~~~// for testing
+                        if(game.blackCheck){
+                            //check red
+                            chessBoardSquares[bkY][bkX].setBackground(Color.decode("#ff7c3b"));
+                            chessBoardSquares[selY][selX].updateUI();
+                            System.out.println("changed colour to red   "+bkY+bkX);
 
                         }else{
-                            
-                            selectedPiece = game.pieceAt(row, col);
-
-                            if(selectedPiece != null){
-                                selected = true;
-                                selY = row;
-                                selX = col;
-                            
-                            }
-
-                            if(game.pieceExists(row, col)){
-                                chessBoardSquares[row][col].setBackground(Color.decode("#c7d6d4"));// select blue
+                            if(bkY%2 == bkX%2){
+                                chessBoardSquares[bkY][bkX].setBackground(colourW);
+            
+                            }else{
+                                chessBoardSquares[bkY][bkX].setBackground(colourB);
                             }
 
                         }
 
-                        //for testing
+                        if(game.whiteCheck){
+                            chessBoardSquares[wkY][wkX].setBackground(Color.decode("#ff7c3b"));
+                            chessBoardSquares[selY][selX].updateUI();
+                            System.out.println("changed colour to red   "+wkY+wkX);
 
-                        String pieceX = game.pieceAt(row, col);
-                        System.out.println(pieceX);
-                        //chessBoardSquares[row][col].setText(pieceX);
-                    }  
-                });
+                        }else{
+                            if(wkY%2 == wkX%2){
+                                chessBoardSquares[wkY][wkX].setBackground(colourW);
+            
+                            }else{
+                                chessBoardSquares[wkY][wkX].setBackground(colourB);
+                            }
 
-                panel.add(chessBoardSquares[row][col]);
+                        }
+
+                        selectedPiece = null;
+
+                        chessBoardSquares[selY][selX].updateUI();
+
+                    }
+
+                    //deselect piece 
+
+                    else{
+                        System.out.println("illegal move");
+                    }
+
+                    selected = false;
+
+                    if(selY%2 == selX%2){
+                        chessBoardSquares[selY][selX].setBackground(colourW);
+    
+                    }else{
+                        chessBoardSquares[selY][selX].setBackground(colourB);
+                    }
+
+                    if(game.pieceAt(selY, selX)!= null){
+                        if(game.pieceAt(selY, selX).charAt(0) == 'x'){
+                            if((game.pieceAt(selY, selX).charAt(1) == 'w')&&(game.whiteCheck)||(game.pieceAt(selY, selX).charAt(1) != 'w')&&(game.blackCheck)){
+                                chessBoardSquares[selY][selX].setBackground(Color.decode("#ff7c3b"));                                            
+
+                            }
+
+                        }
+
+                    }                              
+
+                } else{
+                    
+                    selectedPiece = game.pieceAt(row, col);
+
+                    if(selectedPiece != null){
+                        selected = true;
+                        selY = row;
+                        selX = col;
+                    
+                    }
+
+                    if(game.pieceExists(row, col)){
+                        chessBoardSquares[row][col].setBackground(Color.decode("#c7d6d4"));// select blue
+                    }
+
+                }
+            }  
+        });
+
+        panel.add(chessBoardSquares[row][col]);
 
     }
 
@@ -753,11 +695,6 @@ public class Board{
               System.out.println(ex.getMessage());
           }
     }
-
-
-
-
-    //option pane prompt method
 
     public void setName(){
         NameOfSave = (String)JOptionPane.showInputDialog("Enter Save Name");

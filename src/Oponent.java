@@ -31,13 +31,7 @@ public class Oponent {
             generateRating(board, currentMove);
         }
 
-        //find maximum value
-
-        //return max move
-
-       
         return null;
-
     }
 
     private  void generateRating(String[][] board, Move move){
@@ -69,16 +63,5 @@ public class Oponent {
                 }
             }   
         }
-        
-
-        //if move causes check mate
-        
-        
-
-        //conditions to add/subtract points
-
     }
-
 }
-
-

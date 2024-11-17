@@ -19,27 +19,12 @@ public class DataBaseConn{
             stmt = conn.createStatement();
             System.out.println("I am connected");
             ResultSet rs = stmt.executeQuery(query);
-
-            // for testing query results
-            /* while(rs.next()){ 
-                String save = rs.getString("SaveName");
-                boolean turn = rs.getBoolean("WhiteTurn");
-                String game = rs.getString("GameString");
-                Date date =  rs.getDate("DateCreated");
-
-                System.out.println(save + "\n" + turn +"\n"+ game +"\n"+ date +"\n\n");
-            } */
             
             while(rs.next()){
                 cache.add(new DbRecord(rs.getString("SaveName"), rs.getBoolean("WhiteTurn"), rs.getString("GameString"), rs.getDate("DateCreated")));
                 //System.out.println(rs.getString("SaveName"));//test
             }
 
-            // test print vecto
-
-            /* for(DbRecord a : cache){
-                System.out.println(a.SaveName +"\n"+a.DateCreated);
-            } */
             System.out.println(">>>>>>> bubble sort");
             //bubble sort sort by date
             int n = cache.size();
@@ -57,11 +42,7 @@ public class DataBaseConn{
                 }
                 n--;
             }
-            //testing bubble sort
-            /* for(DbRecord a : cache){
-                System.out.println(a.SaveName +"\n"+a.DateCreated);
-            } */
-            
+
             if(stmt != null){
                 stmt.close();
             }
@@ -73,15 +54,6 @@ public class DataBaseConn{
 
         return cache;
     }
-
-
-
-
-
-
-
-
-
     
     public static void dbInsert(Boolean WhiteTurn, String SaveName, String GameString){
 
@@ -105,10 +77,6 @@ public class DataBaseConn{
 
     }
 
-
-
-
-
     public static void dbUpdate(String SaveName, Boolean WhiteTurn, String GameString){
 
         //LocalDate date = LocalDate.now();
@@ -130,10 +98,6 @@ public class DataBaseConn{
         }
 
     }
-
-
-
-
 
     public static boolean gameExists(String SaveName){
 
@@ -160,6 +124,5 @@ public class DataBaseConn{
         }
 
         return false;
-    }
-    
+    }   
 }

@@ -203,25 +203,6 @@ public class Game {
     
     public boolean movePiece(int row, int col, int newRow, int newCol, String piece){
 
-        //FOR TESTING 
-
-        /* this.gameBoard[newRow][newCol] = this.gameBoard[row][col];
-        this.gameBoard[row][col] = null;
-
-        System.out.println(piece+" moved from "+row+""+col+
-                            " to "+newRow+""+newCol);
-
-        for(int i =0; i<8; i++){
-            for(int j =0; j<8; j++){
-                System.out.print(this.gameBoard[i][j]);
-            }
-            System.out.print("\n");
-        }
-
-        return true; */
-
-        
-
         if(legalMove(row, col, newRow, newCol, piece, true, whiteTurn)){
 
             //start both checks at false
@@ -309,15 +290,6 @@ public class Game {
         return false; 
     }
 
-
-
-
-
-
-
-
-
-
     private boolean legalMove(int row, int col, int newRow, int newCol, String piece, boolean realBoard, boolean turn){ 
 
         //1 validate correct turn
@@ -391,11 +363,6 @@ public class Game {
                     }
                 }
             }
-            /* System.out.println("takeSet: ");
-            for(String take : takeSet){
-                System.out.println(take);
-            } */
-            
 
         return true;
     }
@@ -443,20 +410,6 @@ public class Game {
         return this.gameBoard[row][col];
     }
 
-   /*  public String wherePiece(String pieceName){
-        for(int i=0; i<8; i++){
-            for(int j=0; j<8; j++){
-                if(this.gameBoard[i][j].equals(pieceName)){
-                    return (""+i+j);
-                }
-            }
-        }
-
-        //null if piece doesn't exist
-
-        return null;
-    } */
-
     private boolean kingInCheck(String[][] board, boolean whiteAttackedAt){
         //whiteAttackedAt = true   >> find pieces that are putting WHITE KING in check
         HashSet<String> checkSet = new HashSet<String>();
@@ -493,16 +446,8 @@ public class Game {
                 ite.remove();
             }
         }
-    
-        //check all the pieces in checkset
-
-       // System.out.println("pieces in checkset");
         
         for (String currentPiece : checkSet) {
-
-            //System.out.println(currentPiece);
-
-            //want to find coords of opositely coloured king
 
             if(kingCoords((currentPiece.charAt(1)=='b'), board) != null){
                 if((currentPiece.charAt(1) == 'b')==whiteAttackedAt){// if piece is white and whiteAttackedAt is flase then we a check has occurred
@@ -568,15 +513,6 @@ public class Game {
 
         copyBoard[newRow][newCol] = copyBoard[row][col];
         copyBoard[row][col] = null;
-
-        /* System.out.println("Copy Board:");
-
-        for(int i =0; i<8; i++){
-            for(int j =0; j<8; j++){
-                System.out.print(this.copyBoard[i][j]);
-            }
-            System.out.print("\n");
-        } */
         
        // if its white's turn then we want to check if WHITE is under attack etc ~~ turns dont change until after move validation
         if(kingInCheck(copyBoard, whiteTurn)){
@@ -688,11 +624,7 @@ public class Game {
             }
         }
     }
-
-
-
-
-
+    
     // oponent methods
 
     public Vector<Move> generateMoveList(String[][] board, boolean white){

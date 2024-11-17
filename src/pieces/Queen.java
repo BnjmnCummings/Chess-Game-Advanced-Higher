@@ -79,9 +79,7 @@ public class Queen extends Piece{
                 break;
             }
             moveset.add(""+row+i);
-        }
-        
+        }   
     }
-    
 }
     
